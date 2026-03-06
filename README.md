@@ -2,6 +2,13 @@
 
 Training a Cassie robot to walk using **Omniverse** and **Isaac Lab**.
 
+
+<video controls width="720">
+  <source src="videos/cassie_walk_v0.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+
 ## Policy
 - PPO
 
