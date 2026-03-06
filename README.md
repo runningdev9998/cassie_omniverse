@@ -1,77 +1,116 @@
 # cassie_omniverse
-Training cassie robot to walk. using Omniverse, Isaaclab.
 
-Policy used PPO
-library rl_games
-observations: base_height, base_lin_vel, base_ang_vel, base_yaw_roll, base_angle_to_target, base_up_proj, base_heading_proj, joint_pos_norm, joint_vel_rel, feet_body_forces, actions    
-actions: action taken on all 12 joints of the cassie robot.
-controller: joint effort controller.
+Training a Cassie robot to walk using **Omniverse** and **Isaac Lab**.
 
-To train the model:
-    1. place this repository in source/isaaclab_tasks/isaaclab_tasks/manager_based/classical
-    ( This will help in registering the env. with isaaclab)
-    2. ./isaaclab.sh -p scripts/reinforcement_learning/rl_games/play.py --task Isaac-Custom-Cassie-v
+## Policy
+- PPO
 
-To Play the model( after training ):
-    1. ./isaaclab.sh -p scripts/reinforcement_learning/rl_games/play.py --task Isaac-Custom-Cassie-v0 --num_envs 1
+## RL Library
+- rl_games
 
-Action Manager:  <ActionManager> contains 1 active terms.
-+-------------------------------------+
-|   Active Action Terms (shape: 12)   |
-+--------+---------------+------------+
-| Index  | Name          |  Dimension |
-+--------+---------------+------------+
-|   0    | joint_effort  |         12 |
-+--------+---------------+------------+
+## Observations
+- base_height
+- base_lin_vel
+- base_ang_vel
+- base_yaw_roll
+- base_angle_to_target
+- base_up_proj
+- base_heading_proj
+- joint_pos_norm
+- joint_vel_rel
+- feet_body_forces
+- actions
 
-[INFO] Observation Manager: <ObservationManager> contains 1 groups.
-+-----------------------------------------------------------+
-| Active Observation Terms in Group: 'policy' (shape: (60,)) |
-+-----------+-----------------------------------+-----------+
-|   Index   | Name                              |   Shape   |
-+-----------+-----------------------------------+-----------+
-|     0     | base_height                       |    (1,)   |
-|     1     | base_lin_vel                      |    (3,)   |
-|     2     | base_ang_vel                      |    (3,)   |
-|     3     | base_yaw_roll                     |    (2,)   |
-|     4     | base_angle_to_target              |    (1,)   |
-|     5     | base_up_proj                      |    (1,)   |
-|     6     | base_heading_proj                 |    (1,)   |
-|     7     | joint_pos_norm                    |   (12,)   |
-|     8     | joint_vel_rel                     |   (12,)   |
-|     9     | feet_body_forces                  |   (12,)   |
-|     10    | actions                           |   (12,)   |
-+-----------+-----------------------------------+-----------+
+## Actions
+Action values applied to **all 12 joints** of the Cassie robot.
 
-[INFO] Event Manager:  <EventManager> contains 1 active terms.
-+-------------------------------------+
-| Active Event Terms in Mode: 'reset' |
-+---------+---------------------------+
-|  Index  | Name                      |
-+---------+---------------------------+
-|    0    | reset_base                |
-|    1    | reset_robot_joints        |
-+---------+---------------------------+
+## Controller
+Joint effort controller.
 
-[INFO] Termination Manager:  <TerminationManager> contains 2 active terms.
-+---------------------------------+
-|     Active Termination Terms    |
-+-------+--------------+----------+
-| Index | Name         | Time Out |
-+-------+--------------+----------+
-|   0   | time_out     |   True   |
-|   1   | torso_height |  False   |
-+-------+--------------+----------+
+---
 
-[INFO] Reward Manager:  <RewardManager> contains 5 active terms.
-+-----------------------------------+
-|        Active Reward Terms        |
-+-------+------------------+--------+
-| Index | Name             | Weight |
-+-------+------------------+--------+
-|   0   | progress         |    1.0 |
-|   1   | alive            |    1.0 |
-|   2   | upright          |    0.1 |
-|   3   | move_to_target   |    0.5 |
-|   4   | velocity_penalty |   -1.0 |
-+-------+------------------+--------+
+# Training the Model
+
+1. Place this repository in:
+
+```
+source/isaaclab_tasks/isaaclab_tasks/manager_based/classical
+```
+
+(This helps register the environment with Isaac Lab.)
+
+2. Run:
+
+```bash
+./isaaclab.sh -p scripts/reinforcement_learning/rl_games/train.py --task Isaac-Custom-Cassie-v0
+```
+
+---
+
+# Playing the Trained Model
+
+```bash
+./isaaclab.sh -p scripts/reinforcement_learning/rl_games/play.py --task Isaac-Custom-Cassie-v0 --num_envs 1
+```
+
+---
+
+# Environment Managers
+
+## Action Manager
+
+| Index | Name         | Dimension |
+|------|--------------|----------|
+| 0 | joint_effort | 12 |
+
+---
+
+## Observation Manager
+
+**Active Observation Terms in Group: `policy` (shape: 60)**
+
+| Index | Name | Shape |
+|------|------|------|
+| 0 | base_height | (1,) |
+| 1 | base_lin_vel | (3,) |
+| 2 | base_ang_vel | (3,) |
+| 3 | base_yaw_roll | (2,) |
+| 4 | base_angle_to_target | (1,) |
+| 5 | base_up_proj | (1,) |
+| 6 | base_heading_proj | (1,) |
+| 7 | joint_pos_norm | (12,) |
+| 8 | joint_vel_rel | (12,) |
+| 9 | feet_body_forces | (12,) |
+| 10 | actions | (12,) |
+
+---
+
+## Event Manager
+
+**Mode: `reset`**
+
+| Index | Name |
+|------|------|
+| 0 | reset_base |
+| 1 | reset_robot_joints |
+
+---
+
+## Termination Manager
+
+| Index | Name | Time Out |
+|------|------|------|
+| 0 | time_out | True |
+| 1 | torso_height | False |
+
+---
+
+## Reward Manager
+
+| Index | Name | Weight |
+|------|------|------|
+| 0 | progress | 1.0 |
+| 1 | alive | 1.0 |
+| 2 | upright | 0.1 |
+| 3 | move_to_target | 0.5 |
+| 4 | velocity_penalty | -1.0 |
